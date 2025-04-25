@@ -2,6 +2,7 @@ import {Body, Controller, Get, Param, Post} from '@nestjs/common';
 import {TransactionService} from "../services/transaction.service";
 import {CreateTransactionDto} from "../dto/CreateTransaction.dto";
 import {GetTransactionDto} from "../dto/GetTransaction.dto";
+import {TransactionResponseDto} from "../dto/TransactionResponse.dto";
 
 @Controller('transactions')
 export class TransactionController {
@@ -14,7 +15,8 @@ export class TransactionController {
     }
 
     @Get(':id')
-    get(@Param() params: GetTransactionDto) {
-        return this.service.getOne(params.id);
+    async get(@Param() params: GetTransactionDto): Promise<TransactionResponseDto> {
+        const transaction = await this.service.getOne(params.id);
+        return new TransactionResponseDto(transaction);
     }
 }
